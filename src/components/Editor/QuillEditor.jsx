@@ -33,6 +33,7 @@ const QuillEditor = ({ id, data, tutorial_id }) => {
       }
     }) => handle
   );
+  const editorData = useSelector(({tutorials})=>tutorials.editor)
 
   useEffect(() => {
     setAllSaved(true);
@@ -52,13 +53,14 @@ const QuillEditor = ({ id, data, tutorial_id }) => {
           var converter = new QuillDeltaToHtmlConverter(deltaText, config);
 
           var html = converter.convert();
-          setCurrentStepContent(tutorial_id, id, html)(firestore, dispatch);
+          setCurrentStepContent(tutorial_id, id, html, editorData)(firestore, dispatch);
         });
         provider = new FirestoreProvider(onlineFirebaseApp, ydoc, basePath, {
           disableAwareness: true
         });
       }
       const ytext = ydoc.getText("quill");
+      console.log(ytext,'here is the ytext')
       const container = containerRef.current;
 
       // Clear all extra divs except the editor
@@ -69,7 +71,7 @@ const QuillEditor = ({ id, data, tutorial_id }) => {
         container.removeChild(container.firstChild);
       }
 
-      const editor = new Quill(editorRef.current, {
+      const editor = new Quill("#quill-editor", {
         modules: {
           cursors: true,
           toolbar: [
@@ -77,20 +79,17 @@ const QuillEditor = ({ id, data, tutorial_id }) => {
             ["bold", "italic", "underline"],
             ["image", "code-block"]
           ],
-          history: {
-            userOnly: true
-          }
         },
         placeholder: "Start collaborating...",
         theme: "snow"
       });
 
-      // provider.awareness.setLocalStateField("user", {
-      //   name: currentUserHandle,
-      //   color: getColor(currentUserHandle)
-      // });
-
       binding = new QuillBinding(ytext, editor, provider.awareness);
+
+      //converting the data in redux from HTML to delta form and then setting it to the editor
+      const delta = editor.clipboard.convert(editorData?.step_data[id]?.content);
+      editor.setContents(delta, "silent");
+
     } catch (err) {
       console.log(err);
     }

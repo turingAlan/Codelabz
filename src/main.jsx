@@ -19,6 +19,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </ReactReduxFirebaseProvider>
       </ThemeProvider>
     </Provider>
-  </React.StrictMode>
+  </React.StrictMode> 
 );
 serviceWorker.unregister();

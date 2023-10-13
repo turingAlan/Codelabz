@@ -3,6 +3,9 @@ import * as actions from "../../actions/actionTypes";
 const initialState = {
   current_step: "",
   current_step_no: 0,
+  step_data:{
+
+  }
 };
 
 const TutorialsEditorReducer = (state = initialState, { type, payload }) => {
@@ -14,6 +17,12 @@ const TutorialsEditorReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         current_step: payload,
+      };
+
+    case actions.SET_EDITOR_STEP_DATA:
+      return {
+        ...state,
+        step_data: payload,
       };
 
     case actions.SET_CURRENT_STEP_NO:
