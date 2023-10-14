@@ -86,7 +86,7 @@ const QuillEditor = ({ id, data, tutorial_id }) => {
 
       binding = new QuillBinding(ytext, editor, provider.awareness);
 
-      //converting the data in redux from HTML to delta form and then setting it to the editor
+      //converting the data in redux from HTML to delta and then setting it to the editors default value
       const delta = editor.clipboard.convert(editorData?.step_data[id]?.content);
       editor.setContents(delta, "silent");
 

@@ -19,11 +19,23 @@ const TutorialsEditorReducer = (state = initialState, { type, payload }) => {
         current_step: payload,
       };
 
-    case actions.SET_EDITOR_STEP_DATA:
+    case actions.SET_EDITOR_STEP_CONTENT:
       return {
         ...state,
-        step_data: payload,
+        step_data:{
+          ...state.step_data,
+          [payload.step_id]:{
+            ...state.step_data[payload.step_no],
+            content:payload.content
+          }
+        }
       };
+
+    case actions.SET_EDITOR_STEP_DATA:
+      return{
+        ...state,
+        step_data:payload
+      }
 
     case actions.SET_CURRENT_STEP_NO:
       return {

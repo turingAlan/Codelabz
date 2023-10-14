@@ -203,10 +203,29 @@ export const getCurrentTutorialData =
 
       const stepsQuerySnapshot = await stepsRef.get();
       const steps_obj = {};
+      const steps_editor_obj = {};
       stepsQuerySnapshot.forEach(step => {
         steps_obj[step.id] = step.data();
         // console.log(step.id, step.data())
       });
+
+      stepsQuerySnapshot.forEach(step => {
+        const stepData = step.data();
+
+        //checks whether the step has some user written content or not
+        if(
+          stepData.content ===`<p>Switch to editor mode to begin <strong>${stepData.title}</strong> step</p>`
+        ){
+          steps_editor_obj[step.id] = {
+            ...stepData,
+            content:""
+          }
+        }else{
+          steps_editor_obj[step.id] = stepData;
+        }
+        steps_obj[step.id] = stepData;
+      });
+
 
       const steps = _.orderBy(
         Object.keys(steps_obj).map(step => steps_obj[step]),
@@ -221,6 +240,8 @@ export const getCurrentTutorialData =
           tutorial_id
         }
       });
+      dispatch({type:actions.SET_EDITOR_STEP_DATA,payload:steps_editor_obj})
+
     } catch (e) {
       console.log("GET_CURRENT_TUTORIAL_FAIL", e);
       window.location.href = "/";
@@ -300,15 +321,12 @@ export const setCurrentStepContent =
       console.log(content,'here is the content')
 
       const stepsData = {
-        ...storeData.step_data,
-        [step_id]: {
-          content,
-          step_no:1
-        }
+        step_id,
+        content
       }
 
       dispatch({ type: actions.SET_EDITOR_DATA, payload: content });
-      dispatch({ type: actions.SET_EDITOR_STEP_DATA, payload: stepsData });
+      dispatch({ type: actions.SET_EDITOR_STEP_CONTENT, payload: stepsData });
     } catch (e) {
       console.log(e);
     }
