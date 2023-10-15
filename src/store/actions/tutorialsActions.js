@@ -188,6 +188,7 @@ const checkUserOrOrgHandle = handle => async firestore => {
 
 export const getCurrentTutorialData =
   (owner, tutorial_id) => async (firebase, firestore, dispatch) => {
+    console.log("here is the data")
     try {
       dispatch({ type: actions.GET_CURRENT_TUTORIAL_START });
 
@@ -220,10 +221,10 @@ export const getCurrentTutorialData =
             ...stepData,
             content:""
           }
+          console.log("hello")
         }else{
           steps_editor_obj[step.id] = stepData;
         }
-        steps_obj[step.id] = stepData;
       });
 
 
